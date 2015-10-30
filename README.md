@@ -1,5 +1,5 @@
 # test2playlist - Convert a list of songs into a Spotify playlist
-Batch search a list of songs and add them to a single playlist in Spotify.
+Perform searches from a list of songs and add them to a new single playlist in Spotify.
 
 ## Requirements
 * Python 2
