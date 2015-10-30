@@ -1,4 +1,4 @@
-# test2playlist - Convert a list of songs into a Spotify playlist
+# text2playlist - Convert a list of songs into a Spotify playlist
 Perform searches from a list of songs and add them to a new single playlist in Spotify.
 
 ## Requirements
