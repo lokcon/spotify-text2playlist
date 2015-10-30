@@ -74,10 +74,7 @@ class Spotify:
 
 
 def main():
-    sp = Spotify(secrets["app_clinet_id"], secrets["app_client_secret"],
-                    secrets["redirect_uri"], "andylokon", auth = True)
-
-    pprint(sp.songs_to_playlist(["Goodbye Dear Jane", "Give me love Ed Sheeran"], "New 1"))
+    pass
 
 
 if __name__ == "__main__":
