@@ -39,49 +39,50 @@ class Spotify:
         return self.spotipy.user_playlists(user = self.user_id)
 
 
-    def search_song(self, string, limit = 10):
+    def search_track(self, string, limit = 10):
         results = self.spotipy.search(q = string, limit = limit)
 
-        songs = collections.OrderedDict()
+        tracks = collections.OrderedDict()
         for track in results['tracks']['items']:
             artists = [(artist['name'] + ', ') for artist in track['artists']]
             artists_string = "".join(artists)[:-2] # Throw the last ", " away
-            song_name = track['name']
+            track_name = track['name']
 
-            songs[track['uri']] = (artists_string, song_name)
+            tracks[track['uri']] = (artists_string, track_name)
 
-        return songs
+        return tracks
 
 
-    def search_song_first(self, string):
-        results = self.search_song(string, limit = 1)
+    def search_track_first(self, string):
+        results = self.search_track(string, limit = 1)
         if results:
             return results.items()[0]
         else:
             return None
 
-    def search_songs(self, songs, verbal = False):
+
+    def search_tracks(self, tracks, verbal = False):
         # Search tracks
-        tracks = []
+        track_ids = []
         count = 0
-        for song in songs:
+        for track in tracks:
             try:
-                track_id, (artists, song_name) = self.search_song_first(song)
+                track_id, (artists, track_name) = self.search_track_first(track)
             except TypeError: # current track not found
-                print("\tNot found: \"%s\"" % song)
+                print("\tNot found: \"%s\"" % track)
 
                 continue
             else:
                 count += 1
-                tracks.append(track_id)
+                track_ids.append(track_id)
 
                 if verbal:
-                    print("#%02d Found: %s (%s)" % (count, song_name, artists))
+                    print("#%02d Found: %s (%s)" % (count, track_name, artists))
 
-        return tracks
+        return track_ids
 
 
-    def songs_to_playlist(self, track_ids, new_playlist_name, verbal = False):
+    def tracks_to_playlist(self, track_ids, new_playlist_name, verbal = False):
         # Create playlist
         new_playlist_id = self.create_playlist(new_playlist_name)
 
@@ -105,15 +106,15 @@ def main():
         print("Invalid number of arguments.")
     else:
         # command line arguments
-        (username, playlist, songs_filename) = sys.argv[1:]
+        (username, playlist, tracks_filename) = sys.argv[1:]
 
-        # Construct song lists
-        with open(songs_filename) as f:
-            songs = [line.rstrip() for line in f]
+        # Construct track lists
+        with open(tracks_filename) as f:
+            tracks = [line.rstrip() for line in f]
 
         sp = Spotify(SECRETS, username)
-        track_ids = sp.search_songs(songs, verbal = True)
-        sp.songs_to_playlist(track_ids, playlist, verbal = True)
+        track_ids = sp.search_tracks(tracks, verbal = True)
+        sp.tracks_to_playlist(track_ids, playlist, verbal = True)
 
 
 if __name__ == "__main__":
