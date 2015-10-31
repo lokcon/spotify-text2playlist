@@ -1,4 +1,4 @@
-import spotipy.util
+import spotipy, spotipy.util
 import collections
 import sys
 from app_secrets import SECRETS
@@ -22,7 +22,7 @@ class Spotify:
             self.spotipy = spotipy.Spotify(auth = auth_token)
             self.user_id = self.spotipy.current_user()["id"]
 
-            print("Successfully logined!")
+            print("Successfully loged in! (%s)" % username)
         else:
             self.spotipy = spotipy.Spotify()
             self.user_id = None
@@ -62,6 +62,8 @@ class Spotify:
 
 
     def search_tracks(self, tracks, verbal = False):
+        print("Searches:")
+
         # Search tracks
         track_ids = []
         count = 0
@@ -69,15 +71,13 @@ class Spotify:
             try:
                 track_id, (artists, track_name) = self.search_track_first(track)
             except TypeError: # current track not found
-                print("\tNot found: \"%s\"" % track)
-
-                continue
+                print("\tNo result for \"%s\"" % track)
             else:
                 count += 1
                 track_ids.append(track_id)
 
                 if verbal:
-                    print("#%02d Found: %s (%s)" % (count, track_name, artists))
+                    print("\t#%d Matched %s - %s" % (count, artists, track_name))
 
         return track_ids
 
@@ -100,6 +100,21 @@ class Spotify:
                     (len(track_ids), new_playlist_name))
 
 
+def prompt_confirm(message):
+    CONFIRM_TEXT = "%s [Y/n] "
+
+    sys.stdout.write(CONFIRM_TEXT % message)
+
+    answer = raw_input().lower()
+    if answer in ["y", "ye", "yes", ""]:
+        return True
+    elif answer in ["n", "no"]:
+        return False
+    else:
+        print("Invalid option received. Assumed NO.")
+
+    return False
+
 
 def main():
     if len(sys.argv) != 4:
@@ -110,11 +125,14 @@ def main():
 
         # Construct track lists
         with open(tracks_filename) as f:
-            tracks = [line.rstrip() for line in f]
+            tracks = [line.rstrip() for line in f if line.rstrip()]
 
         sp = Spotify(SECRETS, username)
         track_ids = sp.search_tracks(tracks, verbal = True)
-        sp.tracks_to_playlist(track_ids, playlist, verbal = True)
+
+        question = "Do you want to add them to new playlist? %s" % playlist
+        if prompt_confirm(question):
+            sp.tracks_to_playlist(track_ids, playlist, verbal = True)
 
 
 if __name__ == "__main__":
