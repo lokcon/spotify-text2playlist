@@ -11,3 +11,6 @@ Spotify Web app_clinet_id
 
 ## Usage
 * (to be added)
+
+## To-do
+* Use argparse for the module itself

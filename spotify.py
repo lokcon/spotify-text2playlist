@@ -1,5 +1,6 @@
 import spotipy.util
 import collections
+import sys
 from pprint import pprint
 from app_secrets import secrets
 
@@ -74,7 +75,8 @@ class Spotify:
 
 
 def main():
-    pass
+    if len(sys.argv) != 4:
+        print("Invalid number of arguments.")
 
 
 if __name__ == "__main__":
