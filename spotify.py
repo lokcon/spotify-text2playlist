@@ -60,8 +60,7 @@ class Spotify:
         else:
             return None
 
-
-    def songs_to_playlist(self, songs, new_playlist_name):
+    def search_songs(self, songs, verbal = False):
         # Search tracks
         tracks = []
         count = 0
@@ -75,20 +74,29 @@ class Spotify:
             else:
                 count += 1
                 tracks.append(track_id)
-                print("#%02d Found: %s (%s)" % (count, song_name, artists))
 
+                if verbal:
+                    print("#%02d Found: %s (%s)" % (count, song_name, artists))
+
+        return tracks
+
+
+    def songs_to_playlist(self, track_ids, new_playlist_name, verbal = False):
         # Create playlist
         new_playlist_id = self.create_playlist(new_playlist_name)
 
-        print("Playlist Successfully created!")
+        if verbal:
+            print("Playlist Successfully created!")
 
         # Add tracks to playlist
         self.spotipy.user_playlist_add_tracks(
             user = self.user_id,
             playlist_id = new_playlist_id,
-            tracks = tracks)
+            tracks = track_ids)
 
-        print("%d songs added to playlist: %s" % (len(tracks), new_playlist_name))
+        if verbal:
+            print("%d tracks added to playlist: %s" %
+                    (len(track_ids), new_playlist_name))
 
 
 
@@ -96,13 +104,16 @@ def main():
     if len(sys.argv) != 4:
         print("Invalid number of arguments.")
     else:
+        # command line arguments
         (username, playlist, songs_filename) = sys.argv[1:]
 
-        sp = Spotify(SECRETS, username)
+        # Construct song lists
         with open(songs_filename) as f:
             songs = [line.rstrip() for line in f]
 
-        sp.songs_to_playlist(songs, playlist)
+        sp = Spotify(SECRETS, username)
+        track_ids = sp.search_songs(songs, verbal = True)
+        sp.songs_to_playlist(track_ids, playlist, verbal = True)
 
 
 if __name__ == "__main__":
