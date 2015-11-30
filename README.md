@@ -13,7 +13,6 @@ Spotify Web app_clinet_id
 * (to be added)
 
 ## To-do
-* Use argparse for the module itself
 * Smarter search with no results is found
     * Use google
     * replace "ft.", "featuring" with spaces
