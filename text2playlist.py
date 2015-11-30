@@ -75,7 +75,7 @@ class Spotify:
                 track_ids.append(track_id)
 
                 if verbal:
-                    print("\t#%d Matched %s - %s" % (count, artists, track_name))
+                    print("\t#%d Matched | %s - %s" % (count, artists, track_name))
 
         return track_ids
 
@@ -117,10 +117,10 @@ def prompt_confirm(message):
 def main():
     # argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("username", help = "Spotify username")
+    parser.add_argument("username", help = "Spotify account")
     parser.add_argument("playlist", help = "Name of the playlist to be created")
     parser.add_argument("tracks_filename",
-        help = "Path to a plaintext list of tracks to be added")
+        help = "Path to a file of a list of tracks to be added")
 
     args = parser.parse_args()
 
@@ -131,7 +131,7 @@ def main():
     sp = Spotify(SECRETS, args.username)
     track_ids = sp.search_tracks(tracks, verbal = True)
 
-    question = "Do you want to add them to new playlist? %s" % playlist
+    question = "Do you want to add them to new playlist? %s" % args.playlist
     if prompt_confirm(question):
         sp.tracks_to_playlist(track_ids, args.playlist, verbal = True)
 
