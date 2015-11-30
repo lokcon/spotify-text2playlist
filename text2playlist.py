@@ -1,6 +1,4 @@
-import spotipy, spotipy.util
-import collections
-import sys
+import spotipy, spotipy.util, collections, sys, argparse
 from app_secrets import SECRETS
 from pprint import pprint
 
@@ -117,22 +115,25 @@ def prompt_confirm(message):
 
 
 def main():
-    if len(sys.argv) != 4:
-        print("Invalid number of arguments.")
-    else:
-        # command line arguments
-        (username, playlist, tracks_filename) = sys.argv[1:]
+    # argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("username", help = "Spotify username")
+    parser.add_argument("playlist", help = "Name of the playlist to be created")
+    parser.add_argument("tracks_filename",
+        help = "Path to a plaintext list of tracks to be added")
 
-        # Construct track lists
-        with open(tracks_filename) as f:
-            tracks = [line.rstrip() for line in f if line.rstrip()]
+    args = parser.parse_args()
 
-        sp = Spotify(SECRETS, username)
-        track_ids = sp.search_tracks(tracks, verbal = True)
+    # Construct track lists
+    with open(args.tracks_filename) as f:
+        tracks = [line.rstrip() for line in f if line.rstrip()]
 
-        question = "Do you want to add them to new playlist? %s" % playlist
-        if prompt_confirm(question):
-            sp.tracks_to_playlist(track_ids, playlist, verbal = True)
+    sp = Spotify(SECRETS, args.username)
+    track_ids = sp.search_tracks(tracks, verbal = True)
+
+    question = "Do you want to add them to new playlist? %s" % playlist
+    if prompt_confirm(question):
+        sp.tracks_to_playlist(track_ids, args.playlist, verbal = True)
 
 
 if __name__ == "__main__":
