@@ -13,6 +13,6 @@ Spotify Web app_clinet_id
 * (to be added)
 
 ## To-do
-* Smarter search with no results is found
-    * Use google
-    * replace "ft.", "featuring" with spaces
+* Smarter search when no result for a track is found
+    * Use Google to get track info?
+    * replace words like "ft.", "featuring" with spaces
