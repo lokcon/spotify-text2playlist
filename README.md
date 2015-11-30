@@ -13,7 +13,7 @@ Spotify Web app_clinet_id
 * [Requests](https://github.com/kennethreitz/requests) - Python HTTP module, needed by Spotipy
 
 ## Usage
-### Sppotfy API
+### Spotify API
 To use the script, you need authorized Spotify API access.
 Put your API secrets in `app_secrets.py`, like so:
 ```python
