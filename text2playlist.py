@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import spotipy, spotipy.util, collections, sys, argparse
 from app_secrets import SECRETS
 from pprint import pprint
@@ -38,6 +40,14 @@ class Spotify:
 
 
     def search_track(self, string, limit = 10):
+        # Sanitize the query string
+        chars = ["-", "–", "–", "－", "、", "，", "ft", ".", "featureing"]
+        new_string = string
+        for c in chars:
+            new_string = new_string.replace(c, "")
+
+        print(new_string)
+
         results = self.spotipy.search(q = string, limit = limit)
 
         tracks = collections.OrderedDict()
@@ -54,7 +64,7 @@ class Spotify:
     def search_track_first(self, string):
         results = self.search_track(string, limit = 1)
         if results:
-            return results.items()[0]
+            return list(results.items())[0]
         else:
             return None
 
@@ -103,7 +113,7 @@ def prompt_confirm(message):
 
     sys.stdout.write(CONFIRM_TEXT % message)
 
-    answer = raw_input().lower()
+    answer = input().lower()
     if answer in ["y", "ye", "yes", ""]:
         return True
     elif answer in ["n", "no"]:
