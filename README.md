@@ -9,7 +9,7 @@ and populate the results into a playlist under a specificed Spotify account.
 
 ## Dependencies
 * [Spotipy](https://github.com/plamere/spotipy) - A python wrapper for the
-Spotify Web app_clinet_id
+Spotify Web API
 * [Requests](https://github.com/kennethreitz/requests) - Python HTTP module, needed by Spotipy
 
 ## Usage
